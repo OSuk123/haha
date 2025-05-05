@@ -1,1 +1,301 @@
-# haha
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오전 커플의 이론</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background: url('images/night-sky.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        nav {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        section {
+            display: none;
+            padding: 40px 20px;
+            min-height: 80vh;
+        }
+        #home {
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        .center {
+            text-align: center;
+        }
+        .cute-font {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2em;
+        }
+        .gallery input[type="file"] {
+            display: block;
+            margin: 20px auto;
+        }
+        .gallery img {
+            max-width: 90%;
+            display: block;
+            margin: 10px auto;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            background-color: #ffd1dc;
+            color: #333;
+            cursor: pointer;
+        }
+        .note-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px auto;
+            width: 90%;
+            color: white;
+        }
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .image-container img {
+            max-width: 90%;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .image-wrapper {
+            position: relative;
+        }
+
+        /* 하트 애니메이션 추가 */
+        .heart {
+            position: absolute;
+            color: pink;
+            font-size: 24px;
+            animation: floatHeart 2s ease-out forwards;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li><a href="#" onclick="showSection('home')">홈</a></li>
+        <li><a href="#" onclick="showSection('gallery')">추억의 발자국</a></li>
+        <li><a href="#" onclick="showSection('whispers')">속삭임</a></li>
+        <li><a href="#" onclick="showSection('nextStory')">다음 이야기...</a></li>
+    </ul>
+</nav>
+
+<section id="home" class="center">
+    <h1 class="cute-font">오전커플의 Theory</h1>
+    <p>임실피즈치자</p>
+    <img src="images/피자.jpg" alt="우리 사진" style="max-width:400px; border-radius:10px;">
+    <h2>우리 함께한 지 얼마나 됐게? 💕</h2>
+    <p id="daysTogether">계산 중...</p>
+</section>
+
+<section id="gallery" class="gallery center">
+    <h2>추억의 발자국</h2>
+    <input type="file" accept="image/*" onchange="uploadImage(event)">
+    <div id="galleryPreview" class="image-container"></div>
+</section>
+
+<section id="whispers" class="center">
+    <h2>속삭임</h2>
+    <textarea id="whisperInput" placeholder="메모를 남겨주세요"></textarea>
+    <button onclick="saveWhisper()">남기기</button>
+    <div id="whisperList"></div>
+</section>
+
+<section id="nextStory" class="center">
+    <h2>다음 이야기...</h2>
+    <textarea id="ideaInput" placeholder="우리의 다음 데이트는?"></textarea>
+    <button onclick="saveIdea()">기록하기</button>
+    <div id="ideaList"></div>
+</section>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    const firstDate = new Date("2022-08-17");
+    const today = new Date();
+    const diffTime = today - firstDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    document.getElementById("daysTogether").innerText = `우리는 벌써 ${diffDays}일 째 함께하고 있어요 💗`;
+
+    // 하트 떠오르는 연출
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerText = '💗';
+        const home = document.getElementById('home');
+        heart.style.left = Math.random() * 90 + '%';
+        heart.style.top = Math.random() * 60 + 20 + '%';
+        home.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 2000);
+    }
+
+    setInterval(() => {
+        if (document.getElementById('home').style.display === 'block') {
+            createHeart();
+        }
+    }, 1000);
+
+    // 사진 업로드
+    function uploadImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const imgData = reader.result;
+            const imgElement = document.createElement('img');
+            imgElement.src = imgData;
+
+            const imageWrapper = document.createElement('div');
+            imageWrapper.classList.add('image-wrapper');
+            imageWrapper.innerHTML = `<button class="delete-btn" onclick="deleteImage(event)">❌</button>`;
+            imageWrapper.appendChild(imgElement);
+
+            document.getElementById('galleryPreview').appendChild(imageWrapper);
+            saveImageToLocalStorage(imgData);
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function deleteImage(event) {
+        const imageWrapper = event.target.parentElement;
+        const imgSrc = imageWrapper.querySelector('img').src;
+        imageWrapper.remove();
+
+        let storedImages = JSON.parse(localStorage.getItem("galleryImages") || "[]");
+        storedImages = storedImages.filter(img => img !== imgSrc);
+        localStorage.setItem("galleryImages", JSON.stringify(storedImages));
+    }
+
+    function saveImageToLocalStorage(imgData) {
+        let storedImages = JSON.parse(localStorage.getItem("galleryImages") || "[]");
+        storedImages.push(imgData);
+        localStorage.setItem("galleryImages", JSON.stringify(storedImages));
+    }
+
+    function loadGalleryImages() {
+        const storedImages = JSON.parse(localStorage.getItem("galleryImages") || "[]");
+        const galleryPreview = document.getElementById('galleryPreview');
+        galleryPreview.innerHTML = '';
+
+        storedImages.forEach(imgData => {
+            const imageWrapper = document.createElement('div');
+            imageWrapper.classList.add('image-wrapper');
+            imageWrapper.innerHTML = `<button class="delete-btn" onclick="deleteImage(event)">❌</button>`;
+
+            const imgElement = document.createElement('img');
+            imgElement.src = imgData;
+            imageWrapper.appendChild(imgElement);
+
+            galleryPreview.appendChild(imageWrapper);
+        });
+    }
+
+    window.onload = function() {
+        loadGalleryImages();
+        displayWhispers();
+        displayIdeas();
+    }
+
+    function saveWhisper() {
+        const input = document.getElementById("whisperInput");
+        const content = input.value.trim();
+        if (!content) return;
+        const whispers = JSON.parse(localStorage.getItem("whispers") || "[]");
+        whispers.push(content);
+        localStorage.setItem("whispers", JSON.stringify(whispers));
+        input.value = "";
+        displayWhispers();
+    }
+
+    function displayWhispers() {
+        const container = document.getElementById("whisperList");
+        const whispers = JSON.parse(localStorage.getItem("whispers") || "[]");
+        container.innerHTML = whispers.map(w => `<div class='note-container'>${w}</div>`).join('');
+    }
+
+    function saveIdea() {
+        const input = document.getElementById("ideaInput");
+        const content = input.value.trim();
+        if (!content) return;
+        const ideas = JSON.parse(localStorage.getItem("ideas") || "[]");
+        ideas.push(content);
+        localStorage.setItem("ideas", JSON.stringify(ideas));
+        input.value = "";
+        displayIdeas();
+    }
+
+    function displayIdeas() {
+        const container = document.getElementById("ideaList");
+        const ideas = JSON.parse(localStorage.getItem("ideas") || "[]");
+        container.innerHTML = ideas.map(w => `<div class='note-container'>${w}</div>`).join('');
+    }
+</script>
+</body>
+</html>
+
